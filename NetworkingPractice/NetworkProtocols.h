@@ -8,6 +8,7 @@ public:
 	NetworkProtocols();
 	~NetworkProtocols();
 
+	int initialize();
 	int sendMessage(SOCKET socket, char* buffer, int messageSize);
 	int recvMessage(SOCKET socket, char* buffer, int messageSize);
 
