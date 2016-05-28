@@ -10,6 +10,7 @@ class Client :
 	SOCKET soc;
 public:
 	int setup();
+	void update();
 	Client();
 	~Client();
 };

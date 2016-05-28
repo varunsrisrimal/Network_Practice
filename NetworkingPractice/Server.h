@@ -19,6 +19,7 @@ class Server :
 	Client_Struct client[MAX_CLIENTS];
 public:
 	int setup();
+	void update();
 	Server();
 	~Server();
 };
