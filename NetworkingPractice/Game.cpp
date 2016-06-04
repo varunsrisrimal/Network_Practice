@@ -7,15 +7,13 @@ using namespace std;
 Game::Game()
 {
 	srand((unsigned int(time(NULL))));
-	ball.ballPos.X = rand() % 50 + 50;
-	ball.ballPos.Y = rand() % 15 + 20;
-	ball.direction = rand() % 4 + 1;
 	paddle_posY = 0;
 	paddle_posX = 0;
 	paddle_posY2 = 0;
 	paddle_posX2 = 119;
 	maxBottom = 38;
 
+	SetBallPosition();
 	dir[0] = { -1,-1 };
 	dir[1] = { -1,+1 };
 	dir[2] = { +1,-1 };
@@ -142,12 +140,19 @@ void Game::print2(int prevY, int newY)
 void Game::UpdateBall()
 {
 	COORD tempPos = ball.ballPos;
+	int s1 = score1;
+	int s2 = score2;
 	while (true)
 	{
 		ball.ballPos.X += dir[ball.direction].X;
 		ball.ballPos.Y += dir[ball.direction].Y;
 		if (CheckBallConstraints())
 			break;
+		if (s1 != score1 || s2 != score2)
+		{
+			SetBallPosition();
+			break;
+		}
 	}
 
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), tempPos);
@@ -161,25 +166,42 @@ void Game::UpdateBall()
 bool Game::CheckBallConstraints()
 {
 	srand((unsigned int(time(NULL))));
-	if (ball.ballPos.X <= 0)
+	if (ball.ballPos.X == 1)
 	{
-		ball.ballPos.X -= dir[ball.direction].X;
-		ball.ballPos.Y -= dir[ball.direction].Y;
-		if (ball.direction == 1)
-			ball.direction = 3;
+		if (ball.ballPos.Y >= paddle_posY && ball.ballPos.Y <= paddle_posY + 4)
+		{
+			ball.ballPos.X -= dir[ball.direction].X;
+			ball.ballPos.Y -= dir[ball.direction].Y;
+			if (ball.direction == 1)
+				ball.direction = 3;
+			else
+				ball.direction = 2;
+			return false;
+		}
 		else
-			ball.direction = 2;
-		return false;
+		{
+			score2++;
+			return false;
+		}
 	}
-	else if (ball.ballPos.X >= 119)
+	else if (ball.ballPos.X == 119)
 	{
-		ball.ballPos.X -= dir[ball.direction].X;
-		ball.ballPos.Y -= dir[ball.direction].Y;
-		if (ball.direction == 3)
-			ball.direction = 1;
+		if (ball.ballPos.Y >= paddle_posY && ball.ballPos.Y <= paddle_posY + 4)
+		{
+			ball.ballPos.X -= dir[ball.direction].X;
+			ball.ballPos.Y -= dir[ball.direction].Y;
+			if (ball.direction == 3)
+				ball.direction = 1;
+			else
+				ball.direction = 0;
+			return false;
+		}
 		else
-			ball.direction = 0;
-		return false;
+		{
+			score1++;
+			return false;
+		}
+
 	}
 	else if (ball.ballPos.Y <= 0)
 	{
@@ -202,4 +224,11 @@ bool Game::CheckBallConstraints()
 		return false;
 	}
 	return true;
+}
+
+void Game::SetBallPosition()
+{
+	ball.ballPos.X = rand() % 50 + 50;
+	ball.ballPos.Y = rand() % 15 + 20;
+	ball.direction = rand() % 4 ;
 }

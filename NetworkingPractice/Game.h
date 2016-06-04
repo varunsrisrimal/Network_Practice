@@ -11,6 +11,7 @@ public:
 	Game();
 	~Game();
 	COORD dir[4];
+	void SetBallPosition();
 	void play();
 	void print1(int prevY,int newY);
 	void print2(int prevY, int newY);
@@ -18,5 +19,6 @@ public:
 	bool CheckBallConstraints();
 	Ball ball;
 	int paddle_posX, paddle_posY, paddle_posX2, paddle_posY2, maxBottom;
+	int score1=0, score2=0;
 };
 
